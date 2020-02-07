@@ -1,11 +1,12 @@
 const baseUrl = 'https://api.openweathermap.org/data/2.5/';
 const appID = '&APPID=8ed0861da9937636b9473061da83c43c';
 const defaultCities = [];
-const usCities = masterCityList.filter(f => f.country === 'US' && f.stat.population > 600000);
+const usCities = masterCityList.filter(f => f.country === 'US' && f.stat.population > 800000);
 
-while (defaultCities.length <= 9) {
-    let randomNumber = Math.floor(Math.random() * usCities.length)
-    let cityId = usCities[randomNumber].id;
+while (defaultCities.length <= 13) {
+    console.log(usCities.length)
+    // let randomNumber = Math.floor(Math.random() * usCities.length)
+    let cityId = usCities[defaultCities.length].id;
 
     if (!defaultCities.includes(cityId)) {
         defaultCities.push(cityId);
@@ -17,7 +18,6 @@ const getWeather = queryParams => {
         url: baseUrl + queryParams + appID,
         method: 'GET',
     }).then((resp) => {
-        console.log(resp);
         resp.list.map(city => {
             let li = $('<li>').attr('class', 'list-group-item list-group-item-action').text(`${city.name}, ${city.sys.country}`);
             li.attr('data-id', city.id);
@@ -51,10 +51,10 @@ const buildCityDisplay = (cityObj, cityData) => {
         h1.append(span1, span2);
 
         // This is the weather data bleow for that city
-        let temp = $('<h2>').html('Temperature: ' + Math.round(cityData.temperature) + '&#8457;');
-        let humid = $('<h2>').text('Humidity: ' + cityData.humidity + '%');
-        let wind = $('<h2>').text('Wind Speed: ' + cityData.windSpeed);
-        let uv = $('<h2>').text('UV Index: ' + uvIndex.value); // .attr('class', 'bg-danger');
+        let temp = $('<h2>').html('Temperature: ' + Math.round(cityData.temperature) + ' &#8457;').attr('class', 'pb-2');
+        let humid = $('<h2>').text('Humidity: ' + cityData.humidity + '%').attr('class', 'pb-2');
+        let wind = $('<h2>').text('Wind Speed: ' + cityData.windSpeed + ' MPH').attr('class', 'pb-2');
+        let uv = $('<h2>').text('UV Index: ' + uvIndex.value).attr('class', 'pb-2'); // .attr('class', 'bg-danger');
 
         $('#this-city-weather').append(h1, temp, humid, wind, uv);
 
@@ -62,10 +62,9 @@ const buildCityDisplay = (cityObj, cityData) => {
         let dateDay = 1;
         cityObj.list.map(item => {
             let date = moment(new Date()).add(dateDay, 'd').format('L');
-            console.log(date);
-            let div = $('<div>').attr('class', 'col-md-2 col-sm-12 mr-3 bg-primary mx-auto mb-4');
-            let h2 = $('<h3>').text(date).attr('class', 'py-3');
-            let icon = $('<img>').attr('src', `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`).attr('class', 'py-3');
+            let div = $('<div>').attr('class', 'col-md-2 col-sm-12 mr-3 bg-primary mx-auto border rounded');
+            let h2 = $('<h4>').text(date).attr('class', 'py-3');
+            let icon = $('<img>').attr('src', `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`).attr('class', 'py-3').attr('class', 'w-75');
             let temp = $('<h4>').html('Temp: ' + Math.round(item.main.temp * 9/5 - 459.67) + '&#8457;').attr('class', 'py-3');
             let humid = $('<h4>').text('Humidity: ' + item.main.humidity + '%').attr('class', 'py-3');
 
@@ -91,41 +90,44 @@ $(document).on('click', '.list-group-item', function() {
         lat: $(this).attr('data-lat'),
         lon: $(this).attr('data-lon'),
     }
+    saveToLoacalStorage('cityId', cityId);
 
     $.ajax({
         url: `${baseUrl}forecast?id=${cityId}&cnt=${numOfDays + appID}`,
         method: 'GET',
     }).then((cityObj) => {
-        console.log(cityObj);
         buildCityDisplay(cityObj, cityData);
     })
 })
 
-$('#button').on('click', function() {
+$('#button').on('click', function(event) {
     searchCity();
 })
 
 $(document).on('keypress',function(event) {
-    event.preventDefault();
+    
     
     if(event.which == 13 && event.target.id === 'city-value') {
+        event.preventDefault();
         searchCity();
     }
 });
 
+const saveToLoacalStorage = (type, value) => {
+    localStorage.setItem(type, value);
+}
 
-
-function searchCity() {
+function searchCity(passedInCity = null, queryString = null) {
     let value = $('#city-value')[0].value;
+    if (value) { saveToLoacalStorage('cityName', value); }
     let  numOfDays = '5';
-    
-    console.log(value);
+    if (!queryString) { queryString = 'weather?q=' }
+    if (!value) { value = passedInCity }
 
     $.ajax({
         method: 'GET',
-        url: `${baseUrl}weather?q=${value + appID}`,
+        url: baseUrl + queryString + value + appID,
     }).then((resp) => {
-        console.log(resp);
         $('#this-city-weather').empty();
         $('#five-day').empty();
 
@@ -143,14 +145,22 @@ function searchCity() {
             url: `${baseUrl}forecast?id=${cityData.cityId}&cnt=${numOfDays + appID}`,
             method: 'GET',
         }).then((cityObj) => {
-            console.log(cityObj);
             buildCityDisplay(cityObj, cityData);
         })
     })
 }
 
 $(document).ready(() => {
+    let cityId = localStorage.getItem('cityId');
+    let cityName = localStorage.getItem('cityName');
     getWeather(
         'group?id=' + JSON.stringify(defaultCities).replace(/[\[\]']+/g,'') + '&units=imperial'
     );
+    if (cityName) {
+        searchCity(cityName, 'weather?q=');
+    } else if (cityId) {
+        searchCity(cityId, 'group?id=');
+    } else {
+        searchCity('Dallas', 'weather?q=');
+    }
 })

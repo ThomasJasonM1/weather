@@ -1,0 +1,8 @@
+.navbar-brand {
+    font-size: 3em !important;
+    padding-bottom: 2.5em !important;
+}
+
+#city-label {
+    font-size: 2em;
+}
