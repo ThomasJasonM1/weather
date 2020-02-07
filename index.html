@@ -6,22 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
     <title>Weather App</title>
 </head>
 <body>
     <nav class="navbar navbar-light bg-light">
         <span class="navbar-brand mb-0 py-4 mx-auto h1 font-weight-bold text-monospace">Weather Dashboard</span>
     </nav>
-    <div class="container-fluid text-center main-container my-4">
+    <div class="container-fluid main-container py-4">
         <div class="row">
-            <div class="col-md-4 col-sm-12">
+            <div class="col-md-4 col-sm-12 text-center bg-light mt-3">
                 <form>
                     <div class="form-group">
                         <label for="city-input">Search for a City:</label>
-                        <!-- <input class="form-control" id="city-input" placeholder="Dallas, US"> -->
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Dallas, US">
+                            <input id="city-value" type="text" class="form-control" placeholder="Dallas, US">
                             <div class="input-group-append css">
                                 <button class="btn btn-primary" type="button" id="button"><i class="glyphicon glyphicon glyphicon-search"></i></button>
                             </div>
@@ -30,11 +28,31 @@
                 </form>
                 <div class="container text-center">
                     <ul id="city-list" class="list-group w-100 mx-auto">
+                        <!-- list populated by jquery -->
                     </ul>
                 </div>
             </div>
-            <div id="dashboard" class="col-md-8 col-sm-12 bg-primary">
-                <p>text-monospace</p>
+            <div id="dashboard" class="col-md-8 col-sm-12">
+                <div class="container">
+                    <div class="row">
+                        <div class="w-100 border border bg-light rounded my-4">
+                            <div id="this-city-weather" class="container">
+                                <!-- Content is filled by jquery -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="container-fluid">
+                                <h1>5-Day Forcast</h1>
+                        </div>
+                        <div class="container">
+                            <div id="five-day" class="row">
+                                <!-- <div class="col-md-2 bg-primary"><p>test</p></div>
+                                <div class="col-md-2 bg-danger"><p>test</p></div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -43,6 +61,7 @@
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
         crossorigin="anonymous">
     </script>
+    <script src="./assets/moment.js"></script>
     <script src="./assets/city_list.js"></script>
     <script src="./assets/script.js"></script>
 </body>
