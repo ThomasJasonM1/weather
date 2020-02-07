@@ -46,7 +46,7 @@ const buildCityDisplay = (cityObj, cityData) => {
         let h1 = $('<h1>').text(cityData.name + '  ');
         let span1 = $('<span>').text(dateString + '  ');
         let span2 = $('<span>');
-        let img = $('<img>').attr('src', `http://openweathermap.org/img/wn/${cityData.icon}@2x.png`);
+        let img = $('<img>').attr('src', `https://openweathermap.org/img/wn/${cityData.icon}@2x.png`);
         span2.append(img);
         h1.append(span1, span2);
 
@@ -65,7 +65,7 @@ const buildCityDisplay = (cityObj, cityData) => {
             console.log(date);
             let div = $('<div>').attr('class', 'col-md-2 col-sm-12 mr-3 bg-primary mx-auto mb-4');
             let h2 = $('<h3>').text(date).attr('class', 'py-3');
-            let icon = $('<img>').attr('src', `http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`).attr('class', 'py-3');
+            let icon = $('<img>').attr('src', `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`).attr('class', 'py-3');
             let temp = $('<h4>').html('Temp: ' + Math.round(item.main.temp * 9/5 - 459.67) + '&#8457;').attr('class', 'py-3');
             let humid = $('<h4>').text('Humidity: ' + item.main.humidity + '%').attr('class', 'py-3');
 
