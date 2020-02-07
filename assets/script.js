@@ -4,7 +4,6 @@ const defaultCities = [];
 const usCities = masterCityList.filter(f => f.country === 'US' && f.stat.population > 800000);
 
 while (defaultCities.length <= 13) {
-    console.log(usCities.length)
     // let randomNumber = Math.floor(Math.random() * usCities.length)
     let cityId = usCities[defaultCities.length].id;
 
